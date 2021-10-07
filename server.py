@@ -1,12 +1,19 @@
 import os, time
 import _thread
 import logging
+from signal import signal, SIGINT
+from sys import exit
+from json import loads, dumps
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlparse, parse_qs
+
 
 #shut_down_requested = False
 class RequestHandler(BaseHTTPRequestHandler):
-    protocal_version = "HTTP/1.1"
-
+    protocol_version = "HTTP/1.1"
+    error_content_type = 'text/plain'
+    error_message_format = "Error %(code)d: %(message)s"
+    
     def __init__(self, *args, **kwargs):
         self._request_count = 0
         super().__init__(*args, **kwargs)
@@ -26,9 +33,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         time.sleep(5)
         self.wfile.write(payload)
 
+
     def log_message(self, *args, **kwargs):
         # disable built-in response logging
         pass
+
 
     def _log_request(self):
         current_time = self.date_time_string()
@@ -36,6 +45,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         logging.info("client_address: {client_address}, request_count: {request_count}, current_time: {current_time}".format(
             client_address=self.client_address, request_count=self._request_count, current_time=current_time
         ))
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
