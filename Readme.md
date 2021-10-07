@@ -13,3 +13,19 @@ echo 'GET https://google.com' | \
     jplot code.hist.100+code.hist.200+code.hist.300+code.hist.400+code.hist.500 \
           && cat result.bin | vegeta report
 ```
+
+# Branch
+# v1
+normal one
+
+# v2
+- Handle SIGTERM
+
+# v3
+- Edit Dockerfile `CMD python /server.py` -> `CMD ["python", "/server.py"]`
+
+# v4
+- Add Conneciton close header
+
+# v5 
+- Add Prestop hook
