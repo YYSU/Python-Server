@@ -13,7 +13,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
         self._log_request()
-        message = os.getenv("MESSAGE", default="YenYun")
+        message = os.getenv("MESSAGE", default="YYSU")
         payload = bytes(message, "utf8")
     
         self.send_response(200)
@@ -23,7 +23,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         # Simulate large response
-        time.sleep(3)
+        time.sleep(5)
         self.wfile.write(payload)
 
     def log_message(self, *args, **kwargs):
