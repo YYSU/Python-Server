@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: # my repo
+        image: 624482679723.dkr.ecr.ap-northeast-1.amazonaws.com/python-server:v2 # my repo
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
