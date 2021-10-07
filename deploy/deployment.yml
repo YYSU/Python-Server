@@ -28,6 +28,11 @@ spec:
         env:
         - name: MESSAGE
           value: Testing v1
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 40"]
+      terminationGracePeriodSeconds: 70
 ---
 apiVersion: v1
 kind: Service
