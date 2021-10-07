@@ -5,8 +5,8 @@
 
 # Plot
 ```
-echo 'GET https://google.com' | \
-    vegeta attack -rate 100 -duration 2m | vegeta encode | tee result.bin | \
+echo "GET http://k8s-default-ingressp-e96ce33c04-784362442.ap-northeast-1.elb.amazonaws.com" | \
+    vegeta attack -rate=15/s -duration=3m |  vegeta encode | tee result.bin | \
     jaggr @count=rps \
           hist\[100,200,300,400,500\]:code \
           p25,p50,p95:latency | \
