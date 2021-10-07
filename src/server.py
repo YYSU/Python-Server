@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
 
-#shut_down_requested = False
+shut_down_requested = False
 class RequestHandler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     error_content_type = 'text/plain'
@@ -26,8 +26,8 @@ class RequestHandler(BaseHTTPRequestHandler):
     
         self.send_response(200)
         self.send_header("Content-Length", len(payload))
-        # if shut_down_requested:
-        #     self.send_header("Connection", "close")
+        if shut_down_requested:
+            self.send_header("Connection", "close")
         self.end_headers()
 
         # Simulate large response
@@ -47,6 +47,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def sigterm_handler(*args):
     logging.info('Received SIGTERM, gracefully shutdown now')
+    global shut_down_requested
+    shut_down_requested = True
     _thread.start_new_thread(lambda svc: svc.shutdown(), (httpd, ))
 
 if __name__ == "__main__":
