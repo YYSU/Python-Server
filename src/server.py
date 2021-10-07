@@ -1,7 +1,8 @@
 import os, time
 import _thread
 import logging
-from signal import signal, SIGINT
+import signal
+#from signal import signal, SIGINT, SIGTERM
 from sys import exit
 from json import loads, dumps
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -33,12 +34,9 @@ class RequestHandler(BaseHTTPRequestHandler):
         time.sleep(5)
         self.wfile.write(payload)
 
-
-
     def log_message(self, *args, **kwargs):
         # disable built-in response logging
         pass
-
 
     def _log_request(self):
         current_time = self.date_time_string()
@@ -49,7 +47,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def sigterm_handler(*args):
     logging.info('Received SIGTERM, gracefully shutdown now')
-    _thread.start_new_thread(lambda svc: svc.shut_down(), (httpd, ))
+    _thread.start_new_thread(lambda svc: svc.shutdown(), (httpd, ))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -58,4 +56,10 @@ if __name__ == "__main__":
     server_address = ('0.0.0.0', 8080)
     httpd = ThreadingHTTPServer(server_address, RequestHandler)
     httpd.daemon_threads = False
-    httpd.serve_forever()
+    logging.info('Starting httpd...\n')
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    httpd.server_close()
+    logging.info('Stopping httpd...\n')
