@@ -34,6 +34,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
 
+
     def log_message(self, *args, **kwargs):
         # disable built-in response logging
         pass
@@ -46,10 +47,15 @@ class RequestHandler(BaseHTTPRequestHandler):
             client_address=self.client_address, request_count=self._request_count, current_time=current_time
         ))
 
+def sigterm_handler(*args):
+    logging.info('Received SIGTERM, gracefully shutdown now')
+    _thread.start_new_thread(lambda svc: svc.shut_down(), (httpd, ))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
     server_address = ('0.0.0.0', 8080)
     httpd = ThreadingHTTPServer(server_address, RequestHandler)
+    httpd.daemon_threads = False
     httpd.serve_forever()
