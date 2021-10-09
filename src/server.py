@@ -12,7 +12,7 @@ from urllib.parse import urlparse, parse_qs
 class RequestHandler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     error_content_type = 'text/plain'
-    error_message_format = "Error %(code)d: %(message)s"
+    error_message_format = "[Error %(code)d: %(message)s ]"
     
     def __init__(self, *args, **kwargs):
         self._request_count = 0
